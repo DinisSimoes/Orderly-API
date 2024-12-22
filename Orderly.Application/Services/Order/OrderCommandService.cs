@@ -1,16 +1,19 @@
-﻿using Orderly.Domain.Interfaces.Repositories.Order;
+﻿using Orderly.Domain.Interfaces.Messaging.Kafka;
+using Orderly.Domain.Interfaces.Repositories.Order;
+using Orderly.Domain.Interfaces.Services.Order;
 using Orderly.Infrastructure.Messaging.Kafka.Producers;
 
 namespace Orderly.Application.Services.Order
 {
-    public class OrderCommandService
+    public class OrderCommandService : IOrderCommandService
     {
         private readonly IOrderCommandRepository _orderCommandRepository;
-        private readonly OrderEventProducer _orderEventProducer;
+        private readonly IOrderEventProducer _orderEventProducer;
 
-        public OrderCommandService(IOrderCommandRepository orderCommandRepository)
+        public OrderCommandService(IOrderCommandRepository orderCommandRepository, IOrderEventProducer orderEventProducer)
         {
             _orderCommandRepository = orderCommandRepository;
+            _orderEventProducer = orderEventProducer;
         }
 
         public async Task AddAsync(Domain.Entities.Order order)
