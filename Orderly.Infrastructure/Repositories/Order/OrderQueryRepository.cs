@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
+using Orderly.Domain.Interfaces.Repositories.Order;
 using Orderly.Infrastructure.Persistence;
 
 namespace Orderly.Infrastructure.Repositories.Order
 {
-    public class OrderQueryRepository
+    public class OrderQueryRepository : IOrderQueryRepository
     {
         private readonly MongoDbContext _mongoDbContext;
 
