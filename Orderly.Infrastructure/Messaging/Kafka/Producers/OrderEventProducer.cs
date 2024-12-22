@@ -14,33 +14,21 @@ namespace Orderly.Infrastructure.Messaging.Kafka.Producers
             _producer = new ProducerBuilder<string, string>(config).Build();
         }
 
-        public async Task PublishOrderCreatedEvent(Order order)
+        public async Task PublishOrderCreatedEvent(string operation, Order order)
         {
             try
             {
-                var orderCreatedEvent = new
+                var orderEvent = new OrderEvent
                 {
                     Id = order.Id,
-                    CustomerId = order.CustomerId,
-                    OrderDate = order.OrderDate,
-                    TotalAmount = order.TotalAmount,
-                    Status = order.Status.ToString(),
-                    OrderItems = order.OrderItems.Select(item => new
-                    {
-                        Id = item.Id,
-                        OrderId = item.OrderId,
-                        ProductId = item.ProductId,
-                        ProductName = item.ProductName,
-                        Quantity = item.Quantity,
-                        UnitPrice = item.UnitPrice,
-                        TotalPrice = item.TotalPrice
-                    })
+                    Operation = operation,
+                    Order = order
                 };
 
                 var message = new Message<string, string>
                 {
                     Key = order.Id.ToString(),
-                    Value = JsonConvert.SerializeObject(orderCreatedEvent)
+                    Value = JsonConvert.SerializeObject(orderEvent)
                 };
 
                 await _producer.ProduceAsync("orders", message);

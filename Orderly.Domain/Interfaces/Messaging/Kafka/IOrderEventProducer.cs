@@ -9,6 +9,6 @@ namespace Orderly.Domain.Interfaces.Messaging.Kafka
 {
     public interface IOrderEventProducer
     {
-        Task PublishOrderCreatedEvent(Order order);
+        Task PublishOrderCreatedEvent(string operation, Order order);
     }
 }
