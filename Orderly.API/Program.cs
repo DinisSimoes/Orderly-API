@@ -1,6 +1,8 @@
 using Confluent.Kafka;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using Orderly.Application.CQRS.Commands.Order;
 using Orderly.Application.CQRS.Handlers.Order;
@@ -18,6 +20,7 @@ using Orderly.Infrastructure.Repositories.Order;
 using Orderly.Infrastructure.Repositories.OrderItem;
 using Orderly.Infrastructure.Repositories.Product;
 using Orderly.Infrastructure.Settings;
+using MongoDB.Bson;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,11 +37,18 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
 
 //MongoDB
+//BsonSerializer.RegisterSerializer(new GuidSerializer(MongoDB.Bson.GuidRepresentation.Standard));
+
 builder.Services.AddScoped<MongoDbContext>(sp =>
 {
     var configuration = sp.GetRequiredService<IConfiguration>();
-    var connectionString = configuration.GetConnectionString("MongoDbSettings:ConnectionString");
+    var connectionString = configuration["MongoDbSettings:ConnectionString"];
     var databaseName = configuration["MongoDbSettings:DatabaseName"];
+
+    if (string.IsNullOrEmpty(connectionString))
+    {
+        throw new ArgumentNullException(nameof(connectionString), "MongoDB connection string cannot be null or empty.");
+    }
 
     return new MongoDbContext(connectionString, databaseName);
 });
