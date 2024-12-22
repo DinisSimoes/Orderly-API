@@ -14,6 +14,7 @@ namespace Orderly.Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            var fixedUserId = Guid.Parse("123e4567-e89b-12d3-a456-426614174000");
             // Customer
             modelBuilder.Entity<Customer>()
                 .HasKey(c => c.Id);
@@ -23,6 +24,16 @@ namespace Orderly.Infrastructure.Persistence
                 .WithOne(o => o.Customer)
                 .HasForeignKey(o => o.CustomerId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Customer>().HasData(
+                new Customer
+                {
+                    Id = fixedUserId,
+                    Name = "Teste",
+                    Email = "teste@exemplo.com",
+                    Phone = "+55123456789"
+                }
+            );
 
             // Order
             modelBuilder.Entity<Order>()
