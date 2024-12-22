@@ -1,4 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using Orderly.Domain.Interfaces.Repositories.Order;
 using Orderly.Infrastructure.Persistence;
@@ -11,6 +14,7 @@ namespace Orderly.Infrastructure.Repositories.Order
 
         public OrderQueryRepository(MongoDbContext mongoDbContext)
         {
+            BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
             _mongoDbContext = mongoDbContext;
         }
 
