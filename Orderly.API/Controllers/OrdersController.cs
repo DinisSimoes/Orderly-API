@@ -1,7 +1,9 @@
-﻿using MediatR;
+﻿using Azure.Core;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Orderly.Application.CQRS.Commands.Order;
 using Orderly.Application.CQRS.Queries.Order;
+using Orderly.Domain.Entities;
 
 namespace Orderly.API.Controllers
 {
@@ -17,9 +19,9 @@ namespace Orderly.API.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<IActionResult> GetOrderById([FromBody] GetOrderByIdQuery request)
+        public async Task<IActionResult> GetOrderById(Guid id)
         {
-            var response = await _mediator.Send(request);
+            var response = await _mediator.Send(new GetOrderByIdQuery{ Id = id});
 
             if (response == null) return NotFound();
 
@@ -27,17 +29,17 @@ namespace Orderly.API.Controllers
         }
 
         [HttpGet("customer/{customerId:guid}")]
-        public async Task<IActionResult> GetOrdersByCustomerId([FromBody] GetOrdersByCustomerIdQuery request)
+        public async Task<IActionResult> GetOrdersByCustomerId(Guid customerId)
         {
-            var responses = await _mediator.Send(request);
+            var responses = await _mediator.Send(new GetOrdersByCustomerIdQuery{ CustomerId = customerId });
 
             return Ok(responses);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllOrders([FromBody] GetAllOrdersQuery request)
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllOrders()
         {
-            var responses = await _mediator.Send(request);
+            var responses = await _mediator.Send(new GetAllOrdersQuery());
 
             return Ok(responses);
         }
