@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Orderly.Domain.Interfaces.Repositories.Product;
 using Orderly.Infrastructure.Persistence;
 
 namespace Orderly.Infrastructure.Repositories.Product
 {
-    public class ProductQueryRepository
+    public class ProductQueryRepository : IProductQueryRepository
     {
         private readonly ApplicationDbContext _context;
 
@@ -22,6 +23,12 @@ namespace Orderly.Infrastructure.Repositories.Product
         {
             return await _context.Products
                 .ToListAsync();
+        }
+
+        public async Task<Domain.Entities.Product> GetByNameAsync(string name)
+        {
+            return await _context.Products
+                .FirstOrDefaultAsync(p => p.Name == name);
         }
     }
 }
