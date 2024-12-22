@@ -1,8 +1,9 @@
 ﻿using Orderly.Domain.Interfaces.Repositories.Order;
+using Orderly.Domain.Interfaces.Services.Order;
 
 namespace Orderly.Application.Services.Order
 {
-    public class OrderQueryService
+    public class OrderQueryService : IOrderQueryService
     {
         private readonly IOrderQueryRepository _orderQueryRepository;
 
