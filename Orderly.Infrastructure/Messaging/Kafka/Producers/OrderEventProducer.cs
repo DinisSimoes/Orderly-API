@@ -9,29 +9,52 @@ namespace Orderly.Infrastructure.Messaging.Kafka.Producers
     {
         private readonly IProducer<string, string> _producer;
 
-        public OrderEventProducer(IProducer<string, string> producer)
+        public OrderEventProducer(ProducerConfig config)
         {
-            _producer = producer;
+            _producer = new ProducerBuilder<string, string>(config).Build();
         }
 
         public async Task PublishOrderCreatedEvent(Order order)
         {
-            var orderCreatedEvent = new
+            try
             {
-                Id = order.Id,
-                CustomerId = order.CustomerId,
-                OrderDate = order.OrderDate,
-                TotalAmount = order.TotalAmount,
-                Status = order.Status
-            };
+                var orderCreatedEvent = new
+                {
+                    Id = order.Id,
+                    CustomerId = order.CustomerId,
+                    OrderDate = order.OrderDate,
+                    TotalAmount = order.TotalAmount,
+                    Status = order.Status.ToString(),
+                    OrderItems = order.OrderItems.Select(item => new
+                    {
+                        Id = item.Id,
+                        OrderId = item.OrderId,
+                        ProductId = item.ProductId,
+                        ProductName = item.ProductName,
+                        Quantity = item.Quantity,
+                        UnitPrice = item.UnitPrice,
+                        TotalPrice = item.TotalPrice
+                    })
+                };
 
-            var message = new Message<string, string>
+                var message = new Message<string, string>
+                {
+                    Key = order.Id.ToString(),
+                    Value = JsonConvert.SerializeObject(orderCreatedEvent)
+                };
+
+                await _producer.ProduceAsync("orders", message);
+
+            }
+            catch (ProduceException<string, string> ex)
             {
-                Key = order.Id.ToString(),
-                Value = JsonConvert.SerializeObject(orderCreatedEvent)
-            };
-
-            await _producer.ProduceAsync("orders", message);
+                Console.WriteLine($"Kafka produce failed. ErrorCode: {ex.Error.Code}, Reason: {ex.Error.Reason}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
         }
+
     }
 }
