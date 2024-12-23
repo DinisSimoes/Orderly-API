@@ -1,0 +1,6 @@
+@Orderly.API_HostAddress = http://localhost:5237
+
+GET {{Orderly.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
