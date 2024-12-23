@@ -1,6 +1,6 @@
 # Orderly-API
 
-"corção" do projeto
+"coração" do projeto
 
 ## Projetos Relacionados
 
