@@ -14,7 +14,6 @@ namespace Orderly.Infrastructure.Repositories.Order
 
         public OrderQueryRepository(MongoDbContext mongoDbContext)
         {
-            BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
             _mongoDbContext = mongoDbContext;
         }
 
