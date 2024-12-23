@@ -12,12 +12,12 @@ Este projeto está relacionado a outros repositórios.
 ## Pontos a ter em conta
  - Este é o projeto principal do teste.
  - Para simplificar, criei testes unitários apenas para os serviços das orders. Em um cenário real, testaria muitos mais casos, pois busco manter um padrão de cobertura de código em torno de 90% (incluindo o frontend).
- - O projeto foi desenvolvido com as bases de dados configuradas para rodar localmente. As conexões estão definidas no arquivo appsettings.
+ - O projeto foi desenvolvido com as bases de dados configuradas para rodar localmente. As conexões estão definidas no arquivo appsettings. No entanto, também seria possível configurar facilmente para rodar em Docker.
  - Tanto o projeto quanto o consumidor estão prontos para rodar em Docker. O único componente que não está configurado para Docker é o Angular. Embora não tenha priorizado isso como parte do teste, poderia facilmente criar o Dockerfile para o frontend também.
  - O sistema está estruturado para permitir uma rápida extensão para outras entidades. Já criei os repositórios CRUD e os respectivos serviços para todas as entidades.
  - Apenas a entidade orders possui a implementação completa de CQRS e controladores, pois foram o foco do teste.
  - As migrações precisam ser executadas antes de iniciar o projeto.
- - O Kafka foi configurado e está rodando em Docker.
+ - O Kafka foi configurado e está rodando em Docker. A configuração está documentada no arquivo docker-compose.yml, localizado na pasta docker.
 
 ## Tomadas de Decisão Durante o Desenvolvimento
 
